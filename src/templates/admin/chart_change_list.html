@@ -1,0 +1,77 @@
+{% extends "admin/import_export/change_list_export.html" %}
+{# extends "admin/change_list.html" #}
+
+{% load static %}
+
+<!-- Override extrahead to add Chart.js -->
+{% block extrahead %}
+    {{ block.super }}
+
+    {% if chart_data and chart_title %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctx = document.getElementById('myChart').getContext('2d');
+
+      // Sample data
+      const chartData = {{ chart_data | safe }};
+
+      // Parse the dates to JS
+      chartData.forEach((d) => {
+        d.x = new Date(d.date);
+      });
+
+      // Render the chart
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          datasets: [
+            {
+              label: '{{ chart_title }}',
+              data: chartData,
+              backgroundColor: 'rgba(20,220,20,0.5)',
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            xAxes: [
+              {
+                type: 'time',
+                time: {
+                  unit: 'day',
+                  round: 'day',
+                  displayFormats: {
+                    day: 'MMM D',
+                  },
+                },
+              },
+            ],
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+        },
+      });
+    });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <!-- Render our chart -->
+    {% if chart_data and chart_title  %}
+    <div style="width: 80%;">
+      <canvas style="margin-bottom: 30px; width: 60%; height: 50%;" id="myChart"></canvas>
+    </div>
+    {% endif %}
+    <!-- Render the rest of the ChangeList view -->
+
+    {{ block.super }}
+{% endblock %}

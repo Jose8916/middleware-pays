@@ -1,0 +1,17 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    <li>
+        <a href="{% url 'admin-paywall-collaborators-upload' %}" class="historylink">
+            Import
+        </a>
+    </li>
+    <li>
+        <a href="{% url 'admin-paywall-collaborators-annulled' %}" class="historylink">
+            Bajas
+        </a>
+    </li>
+    {% include "admin/import_export/change_list_import_item.html" %}
+    {% include "admin/import_export/change_list_export_item.html" %}
+    {{ block.super }}
+{% endblock %}

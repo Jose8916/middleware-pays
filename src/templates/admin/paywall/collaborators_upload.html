@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+
+        <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        &rsaquo;
+        <a href="{% url 'admin:paywall_collaborators_changelist' %}">{% trans 'Colaboradores' %}</a>
+        &rsaquo;
+        Import
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block content %}
+    <h1>Importar</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+        Este importador importará los siguientes campos:
+            <code>código, email, nombre, a_paterno, a_materno, doc_tipo, doc_número</code>
+        </p>
+
+        <fieldset class="module aligned">
+          <div class="form-row">
+            <label for="id_import_file">Fichero a importar:</label>
+            <input type="file" name="import_file" required="" id="id_import_file">
+          </div>
+      </fieldset>
+
+      <div class="submit-row">
+        <input type="submit" class="default" value="Upload">
+      </div>
+  </form>
+{% endblock %}

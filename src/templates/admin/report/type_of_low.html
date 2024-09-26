@@ -1,0 +1,124 @@
+{% load i18n static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+        <link href='{% static "css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet" media="screen">
+        <script type="text/javascript" src='{% static "js/bootstrap-datetimepicker.js" %}' charset="UTF-8"></script>
+        <style>
+            #datetimepicker_start{
+                width: 150px;
+                float:left;
+
+            }
+            #datetimepicker_end{
+                width: 150px;
+            }
+            #from_start_date{
+                float:left;
+                padding-right:5px;
+            }
+            #to_end_day{
+                float:left;
+                padding-right:5px;
+                padding-left:5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="alert alert-info">
+            <ul class="messagelist">
+                <li class="success">Reporte de bajas por tipo.</li>
+            </ul>
+        </div>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <table class='search_date_incomabyroom'>
+                <tr>
+
+                    <th>Buscar por rango de Fechas:</th>
+                    <td>
+                        <span style="padding-left:10px;padding-right:5px;">De</span>
+                    </td>
+                    <td>
+                        <div class='input-group date' id='datetimepicker_start'>
+                            <input type='text' class="form-control" name="start_day" id="start_day" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <span id="to_end_day">a</span>
+                    </td>
+                    <td>
+                        <div class='input-group date' id='datetimepicker_end'>
+                            <input type='text' class="form-control" name="end_day" id="end_day" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </td>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker_start').datetimepicker({
+                                            format: 'dd/mm/yyyy',
+                                            language:  'es',
+                                            weekStart: 1,
+                                            todayBtn:  1,
+                                            autoclose: 1,
+                                            todayHighlight: 1,
+                                            startView: 2,
+                                            minView: 2,
+                                            forceParse: 0
+                                        });
+                                    $('#datetimepicker_end').datetimepicker({
+                                            format: 'dd/mm/yyyy',
+                                            language:  'es',
+                                            weekStart: 1,
+                                            todayBtn:  1,
+                                            autoclose: 1,
+                                            todayHighlight: 1,
+                                            startView: 2,
+                                            minView: 2,
+                                            forceParse: 0
+                                        });
+                                });
+                            </script>
+                    <td>
+                        <button type="submit" name="action" value="buscar" style="margin-left:10px">buscar</button>
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">&nbsp;</td>
+                </tr>
+            </table>
+        </form>
+
+
+        <canvas id="myChart"></canvas>
+        <script type="text/javascript">
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+                // The data for our dataset
+                    data: {{data_graph|safe}},
+                // Configuration options go here
+                options: {}
+            });
+        </script>
+    </body>
+</html>

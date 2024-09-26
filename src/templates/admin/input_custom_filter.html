@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}
+    <i class="fas fa-angle-down" onclick="
+        if(document.getElementById('field_custom_text_search').style.display=='block'){
+            document.getElementById('field_custom_text_search').style.display='none';
+        }
+        else{
+            document.getElementById('field_custom_text_search').style.display='block';
+        }
+
+    "></i>
+</h3>
+
+<ul >
+  <li id="field_custom_text_search" style="display:none;">
+    <form >
+        <input
+           type="text"
+           name="delivery"/>
+    </form>
+  </li>
+</ul>

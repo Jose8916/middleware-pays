@@ -1,0 +1,41 @@
+# TEMPs
+*.bak
+*.DS_Store
+*.egg-info
+*.old
+*.orig
+*.pyc
+*~
+.*.swp
+.*~
+
+# IDEs
+*.code-workspace
+*.log*
+*.nja
+*.sublime-*
+*.~*
+.hgignore
+.idea/*
+.komodoproject
+.komodotools
+.project
+.pydevproject
+.vscode
+src/.settings/*
+
+# PROJECT
+env/*
+local_settings.py
+src/.venv/*
+src/env/*
+src/media/*
+src/static_files/*
+venv/*
+
+# DBs
+*.dat
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3

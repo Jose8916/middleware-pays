@@ -1,0 +1,201 @@
+{% load i18n static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+    <link href='{% static "css/bootstrap-datetimepicker.min.css" %}' rel="stylesheet" media="screen">
+    <script type="text/javascript" src='{% static "js/bootstrap-datetimepicker.js" %}' charset="UTF-8"></script>
+
+
+    <script>
+        function ocultar() {
+              var x = document.getElementById("end_datePicker");
+              if (x.style.display === "none") {
+                x.style.display = "inline-block";
+                document.getElementById("range_de").style.display = "inline-block";
+                document.getElementById("range_a").style.display = "inline-block";
+
+              } else {
+                x.style.display = "none";
+                document.getElementById("range_de").style.display = "none";
+                document.getElementById("range_a").style.display = "none";
+              }
+        }
+
+        function mostrar_bloque() {
+            var div_month = document.getElementById("display_month");
+            var div_day = document.getElementById("display_day");
+            var periodo = document.getElementById("periodo").value;
+            if (periodo == "meses") {
+                div_month.style.display = "none";
+                div_day.style.display = "none";
+            }
+            else if (periodo == "dias")
+            {
+                div_day.style.display = "block";
+            }
+            else
+            {
+                div_month.style.display = "none";
+                div_day.style.display = "none";
+            }
+        }
+    </script>
+    <style>
+        #datetimepicker_start{
+            width: 150px;
+            float:left;
+
+        }
+        #datetimepicker_end{
+            width: 150px;
+        }
+        #from_start_date{
+            float:left;
+            padding-right:5px;
+        }
+        #to_end_day{
+            float:left;
+            padding-right:5px;
+            padding-left:5px;
+        }
+    </style>
+</head>
+<body>
+    <h3>Bajas por Suspención</h3>
+    <form action="" method="post" id="graphic_1">
+        {% csrf_token %}
+        <table style="padding: 5px;">
+            <tr>
+                <td style="padding: 5px;">
+                    <label for="sites">Filtrar por site: </label><br>
+                    <select name="sites" id="sites">
+                        <option value="" {% if sites == '' %} selected {% endif %} >Todo</option>
+                        <option value="elcomercio" {% if sites == 'elcomercio' %} selected {% endif %} >Elcomercio</option>
+                        <option value="gestion" {% if sites == 'gestion' %} selected {% endif %} >Gestion</option>
+                    </select>
+                </td>
+                <td style="padding: 10px;">
+                    <label for="sites">periodo: </label><br>
+                    <select name="periodo" id="periodo" onchange="mostrar_bloque()" >
+                        <option value="meses" {% if periodo == 'meses' %} selected {% endif %} >meses</option>
+                        <option value="dias" {% if periodo == 'dias' %} selected {% endif %} >dias</option>
+                    </select>
+
+                </td>
+                <td style="padding: 10px;">
+                    <div id="display_month" style="display:none;">
+                        <label for="range_de" style="padding-left:10px;">Seleccione el mes o rango de meses: </label>
+                        <span id="range_de" style="padding-left:5px; padding-right:5px; display:none;">De</span>
+                        <input type="text" class="form-control" style="width:100px; display:inline-block"
+                               id="start_datePicker" name="start_date" autocomplete="off">
+                        <span id="range_a" style="padding-right:5px; display:none; padding-left:5px;">a</span>
+                        <input type="text" class="form-control" style="width:100px; display:none;"
+                               id="end_datePicker" name="end_date" autocomplete="off">
+                        <input type="checkbox" id="range_month" name="vehicle1" value="Bike" onclick="ocultar()">
+                        <label for="range_month">Por rango de meses</label><br>
+                    </div>
+
+                    <div id="display_day" style="padding-left: 15px; display:none;" >
+                        <div class="row">
+                            <span id="from_start_date">De</span>
+                            <div class='input-group date' id='datetimepicker_start'>
+                                <input type='text' class="form-control" name="start_day" id="start_day" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <span id="to_end_day">a</span>
+                            <div class='input-group date' id='datetimepicker_end'>
+                                <input type='text' class="form-control" name="end_day" id="end_day" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker_start').datetimepicker({
+                                            format: 'dd/mm/yyyy',
+                                            language:  'es',
+                                            weekStart: 1,
+                                            todayBtn:  1,
+                                            autoclose: 1,
+                                            todayHighlight: 1,
+                                            startView: 2,
+                                            minView: 2,
+                                            forceParse: 0
+                                        });
+                                    $('#datetimepicker_end').datetimepicker({
+                                            format: 'dd/mm/yyyy',
+                                            language:  'es',
+                                            weekStart: 1,
+                                            todayBtn:  1,
+                                            autoclose: 1,
+                                            todayHighlight: 1,
+                                            startView: 2,
+                                            minView: 2,
+                                            forceParse: 0
+                                        });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 15px;">
+                     <input type="submit" style="margin-top:20px">
+                    <br><br>
+                </td>
+            </tr>
+        </table>
+
+        <canvas id="myChart"></canvas>
+        <script type="text/javascript">
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+                // The data for our dataset
+                    data: {{data_graph|safe}},
+                // Configuration options go here
+                options: {}
+            });
+        </script>
+        <br><br>
+        <table border="1">
+            {% for data in table_data %}
+                {% if forloop.first %}
+                    <tr>
+                        <th>
+                            Fecha
+                        </th>
+                        {% for event_type in data.list_event_type %}
+                            <th>
+                                 {{event_type.name_type}}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td style="text-align:center">
+                        {{ data.day }}
+                    </td>
+                    {% for event_type in data.list_event_type %}
+                        <td style="text-align:center">
+                            {{event_type.cantidad}}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+
+</body>
+</html>

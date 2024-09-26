@@ -1,0 +1,17 @@
+{% load i18n %}
+<h3 id="{{ title }}">{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}
+    <i class="fas fa-angle-down" onclick="
+        if(document.getElementById(ul-{{ title }}).style.display=='block'){
+            document.getElementById(ul-{{ title }}).style.display='none';
+        }
+        else{
+            document.getElementById(ul-{{ title }}).style.display='block';
+        }
+    "></i></h3>
+
+<ul id="ul-{{ title }}">
+{% for choice in choices %}
+    <li{% if choice.selected %} class="selected"{% endif %}>
+    <a href="{{ choice.query_string|iriencode }}" title="{{ choice.display }}">{{ choice.display }}</a></li>
+{% endfor %}
+</ul>

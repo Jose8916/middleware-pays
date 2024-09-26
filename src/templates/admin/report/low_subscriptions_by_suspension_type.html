@@ -1,0 +1,157 @@
+{% load i18n static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        function ocultar() {
+              var x = document.getElementById("end_datePicker");
+              if (x.style.display === "none") {
+                x.style.display = "inline-block";
+                document.getElementById("range_de").style.display = "inline-block";
+                document.getElementById("range_a").style.display = "inline-block";
+
+              } else {
+                x.style.display = "none";
+                document.getElementById("range_de").style.display = "none";
+                document.getElementById("range_a").style.display = "none";
+              }
+        }
+    </script>
+</head>
+<body>
+    <h3>Bajas por Suspencion</h3>
+    <form action="" method="post" id="graphic_1">
+        {% csrf_token %}
+        <table style="padding: 5px;">
+            <tr>
+                <td>
+                    <label for="sites">Filtrar por site: </label>
+                    <select name="sites" id="sites">
+                        <option value="" {% if sites == '' %} selected {% endif %} >Todo</option>
+                        <option value="elcomercio" {% if sites == 'elcomercio' %} selected {% endif %} >Elcomercio</option>
+                        <option value="gestion" {% if sites == 'gestion' %} selected {% endif %} >Gestion</option>
+                    </select>
+                </td>
+                <td>
+                    <label for="range_de" style="padding-left:10px;">Seleccione el mes o rango de meses: </label>
+                    <span id="range_de" style="padding-left:5px; padding-right:5px; display:none;">De</span>
+                    <input type="text" class="form-control" style="width:100px; display:inline-block"
+                           id="start_datePicker" name="start_date" autocomplete="off">
+                    <span id="range_a" style="padding-right:5px; display:none; padding-left:5px;">a</span>
+                    <input type="text" class="form-control" style="width:100px; display:none;"
+                           id="end_datePicker" name="end_date" autocomplete="off">
+
+                    <input type="checkbox" id="range_month" name="vehicle1" value="Bike" onclick="ocultar()">
+                    <label for="range_month">Por rango de meses</label><br>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+
+
+        <script>
+            var endYear = new Date(new Date().getFullYear(), 11, 31);
+            $("#start_datePicker").datepicker({
+              format: "m/yyyy",
+              startDate: "1/2016",
+              endDate: endYear,
+              startView: "months",
+              minViewMode: "months",
+              maxViewMode: "years"
+            })
+            $("#end_datePicker").datepicker({
+              format: "m/yyyy",
+              startDate: "1/2016",
+              endDate: endYear,
+              startView: "months",
+              minViewMode: "months",
+              maxViewMode: "years"
+            })
+        </script>
+        <input type="submit">
+        <br><br>
+        <canvas id="myChart"></canvas>
+            <script type="text/javascript">
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'bar',
+                    // The data for our dataset
+                        data: {{data_graph|safe}},
+                    // Configuration options go here
+                    options: {}
+                });
+            </script>
+        <br><br>
+        {% for data_graph_obj in list_data_graph %}
+            <div id="container" style="width: {{width_div}}%; display: inline-block;">
+                <canvas id="myChart{{ forloop.counter }}"></canvas>
+                <script type="text/javascript">
+                    var ctx = document.getElementById('myChart{{ forloop.counter }}').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'bar',
+                        // The data for our dataset
+                            data: {{data_graph_obj|safe}},
+                        // Configuration options go here
+                        options: {}
+                    });
+                </script>
+            </div>
+        {% endfor %}
+        <br><br>
+        <canvas id="myChart_main"></canvas>
+        <script type="text/javascript">
+            var ctx = document.getElementById('myChart_main').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+                // The data for our dataset
+                    data: {{data_graph_main|safe}},
+                // Configuration options go here
+                options: {}
+            });
+        </script>
+        <table border="1">
+            <tr>
+                <th>
+                    Fecha
+                </th>
+                <th>
+                    Altas
+                </th>
+                <th>
+                    Bajas
+                </th>
+            </tr>
+
+            {% for reporte in reportes %}
+                <tr>
+                    <td>
+                        {{ reporte.name }}
+                    </td>
+                    <td>
+                        {{ reporte.altas }}
+                    </td>
+                    <td>
+                        {{ reporte.bajas }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+
+</body>
+</html>

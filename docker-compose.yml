@@ -1,0 +1,40 @@
+version: "3.4"
+
+services:
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: paywall
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data/pgdata
+    networks:
+      - django-network
+    ports:
+      - 5432:5432
+
+  web:
+    build:
+      dockerfile: Dockerfile
+      context: ./src
+    networks:
+      - django-network
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: paywall
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/:/app
+    command: python -u manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+networks:
+  django-network:
+    driver: bridge

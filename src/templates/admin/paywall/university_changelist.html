@@ -1,0 +1,12 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+<ul class="object-tools" style="float: left !important; margin-top: -17px; !important">
+
+  <li>
+    <a href="import-csv/" class="addlink">Import CSV</a>
+  </li>
+</ul>
+    <br />
+    {{ block.super }}
+{% endblock %}

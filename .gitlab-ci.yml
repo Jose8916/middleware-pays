@@ -1,0 +1,14 @@
+stages:
+  - analize
+
+sonar:
+  stage: analize
+  image: sonarsource/sonar-scanner-cli:4.5
+  script:
+    - sonar-scanner
+  only:
+    - merge_requests
+  allow_failure: true
+  tags:
+    - aws
+    - docker

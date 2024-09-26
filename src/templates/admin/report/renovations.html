@@ -1,0 +1,97 @@
+{% extends "admin/base_site_custom.html" %}
+{% load custom_filters %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="/admin/">Inicio</a> ›
+        <a href="/admin/cobro/intentos/">Intentos de cobro</a> ›
+        Reporte de intentos de cobro por Marca.
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="alert alert-info">
+        <ul class="messagelist">
+            <li class="success">Reporte de intentos de cobro.</li>
+        </ul>
+    </div>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <table class='search_date_incomabyroom'>
+            <tr>
+                <td>{{ form.start_date.label_tag }}</td>
+                <td>
+                    {{ form.start_date }}
+                    <span class="help-inline">{{ form.start_date.errors }}</span>
+                </td>
+                <td>{{ form.end_date.label_tag }}</td>
+                <td>
+                    {{ form.end_date }}
+                    <span class="help-inline">{{ form.end_date.errors }}</span>
+                </td>
+                <td>
+                    <select name="estado">
+                        <option {% if estado == "todos" %} selected {% endif %} value="todos">Seleccione una opcion</option>
+                        <option {% if estado == "terminados_suspendidos" %} selected {% endif %} value="terminados_suspendidos">Suspenciones que fueron terminadas</option>
+                        <option {% if estado == "terminados_cancelados" %} selected {% endif %} value="terminados_cancelados">Cancelaciones que fueron terminadas</option>
+                        <option {% if estado == "terminated_by_arc_admin" %} selected {% endif %} value="terminated_by_arc_admin">De activo a terminado</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="site">
+                        <option {% if site == "todos" %} selected {% endif %} value="todos">Seleccione una Marca</option>
+                        <option {% if site == "elcomercio" %} selected {% endif %} value="elcomercio">El Comercio</option>
+                        <option {% if site == "gestion" %} selected {% endif %} value="gestion">Gestion</option>
+                    </select>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <button type="submit" name="action" value="buscar">buscar</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="9">&nbsp;</td>
+            </tr>
+        </table>
+    </form>
+
+    <table id="result_list">
+        <thead>
+            <tr>
+                <th>Suscripción</th>
+                <th>Marca</th>
+                <th>Subscription Id</th>
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Intentos de cobro</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Termino</th>
+                <th>Detalle</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in fail_renew_subscriptions %}
+            <tr>
+                <td>{{row.nombre_suscripcion}}</td>
+                <td>{{row.brand}}</td>
+                <td>{{row.code_subscription}}</td>
+                <td>{{row.email}}</td>
+                <td>{{row.name_user}}</td>
+                <td>{{row.cantidad_intentos}}</td>
+                <td>{{row.date_start}}</td>
+                <td>{{row.date_terminate}}</td>
+                <td>{{row.detail_all}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><b>Total:</b> {{total}}</td>
+            </tr>
+        </tfoot>
+
+    </table>
+
+{% endblock %}

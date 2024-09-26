@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FIA</title>
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1252229265121278');
+        fbq('track', 'PageView');
+        fbq('track', 'ViewPaywall');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1252229265121278&ev=PageView&noscript=1"
+  /></noscript>
+    <!-- End Facebook Pixel Code -->
+</head>
+<body>
+    <h1>FIA</h1>
+    <form action="." method="POST">
+        {% csrf_token %}
+        <label for="uuid">UUID:</label></br>
+        <input type="text" id="uuid" name="uuid"></br><br>
+
+        <label for="event">Evento:</label></br>
+        <input type="radio" id="subscribe" name="event" value="Subscribe">
+        <label for="subscribe">Subscribe</label><br>
+        <input type="radio" id="login" name="event" value="LogIntoAccount">
+        <label for="login">LogIntoAccount</label><br><br>
+
+        <input type="checkbox" name="is_suscriber" id="is_suscriber" value="true">
+        <label for="is_suscriber">Es suscriptor:</label></br><br>
+
+        <button type="submit">Generar pixel</button>
+    </form>
+
+    {% if pixel %}
+    <h2>pixel</h2>
+    {{ pixel }}
+
+    <h2>event "{{ event_name }}"</h2>
+    <ul>
+        {% for key, value in event_data.items %}
+            <li>{{ key }}: {{ value }}</li>
+        {% empty %}
+            <li>--ninguno--</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h2>querystrings</h2>
+    <ul>
+        {% for key, value in querystring.items %}
+            <li>{{ key }}: {{ value }}</li>
+        {% empty %}
+            <li>--ninguno--</li>
+        {% endfor %}
+    </ul>
+
+    <h2>headers</h2>
+    <ul>
+        {% for key, value in headers.items %}
+            <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        setTimeout(()=>{
+          var s = document.createElement("div");
+          s.innerHTML = '{% autoescape off %}{{ pixel }}{% endautoescape %}'
+          document.body.appendChild(s)
+        }, 1000)
+    </script>
+
+</body>
+</html>
